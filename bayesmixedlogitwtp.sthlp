@@ -78,6 +78,7 @@ is normalization of coefficients using the
 (random) coefficient on a designated price variable, as described in Train and Weeks (2005), Scarpa, Thiene, and 
 Train (2008), and Hole and Kolstad (2012). 
 
+{pstd}
 The model assumes that the coefficient on the price variable follows (the negative of) a log-normal distribution. 
 Hence, if the estimated parameter is {bf:b}, the price variable has coefficient {bf:-exp(b)}. The transformed coefficient
 is saved and displayed as part of the output, but as presented the saved and display value is the negative of the exponentiated
@@ -401,4 +402,4 @@ Comments, criticisms, and suggestions for improvement are welcome.{p_end}
 {p 5 14 2}
 Manual:  {manlink R clogit}
 
-{p 7 14 2}Help:  {helpb mf_amcmc:amcmc()}, {helpb bayesmixedlogit}, {helpb mixlogit}, {helpb mixlogitwtp}, {helpb moremata}, {helpb spost9_ado} (if installed){p_end}
+{p 7 14 2}Help:  {helpb mf_amcmc:amcmc()}, {helpb bayesmixedlogit}, {helpb mixlogit}, {helpb mixlogitwtp}, {helpb moremata} (if installed){p_end}
