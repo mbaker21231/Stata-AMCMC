@@ -1,5 +1,6 @@
 *! bayesmixedlogitwtp 1.0.0 10July2015
 *! essentially, a modified version of bayesmixedlogit as of 1Jan2015
+*! updated 24Sep2015 to fix the lncp floating point problem, as was done with bayesmixedlogit
 *! author Matthew J. Baker
 program bayesmixedlogitwtp
 	version 11.2
@@ -609,7 +610,9 @@ real scalar lncp(real rowvector beta_rn,
 		Xfp=panelsubmatrix(Xf,i,z)
 		yp =panelsubmatrix(y,i,z)
 		mus=rowsum(Xrp:*beta_rnp)+rowsum(Xfp:*beta_fn*(-beta_rnp[1,1]))
-		lnp=lnp+colsum(yp:*mus):-ln(colsum(exp(mus)))
+		max=max(mus)
+		sum=max+ln(colsum(exp(mus:-max)))
+		lnp=lnp+colsum(yp:*mus):-sum
 	}
 	lnprior=-1/2*(beta_rn-b)*Winv*(beta_rn-b)'-
 	        1/2*ldetW-cols(b)/2*ln(2*pi())

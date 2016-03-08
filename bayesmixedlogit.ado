@@ -4,6 +4,7 @@
 *! updated 9Sept2014-17Nov2014 - added indidividual level parameters
 *! updated 1Jan2015-7Jan2015 - replace "tab" function in counting choices to allow for larger data sets
 *! updated 8Jan2015 - fixed problem with using fixed coefficients in estimation
+*! updated 9Sep2015 - fixed problem with floating point math - replaced ln(sum(exp(x))) with max+ln(sum(exp(x-max))) in lncp function
 *! author Matthew J. Baker
 program bayesmixedlogit
 	version 11.2
@@ -594,7 +595,9 @@ real scalar lncp(real rowvector beta_rn,
 		Xfp=panelsubmatrix(Xf,i,z)
 		yp =panelsubmatrix(y,i,z)
 		mus=rowsum(Xrp:*beta_rn)+rowsum(Xfp:*beta_fn)
-		lnp=lnp+colsum(yp:*mus):-ln(colsum(exp(mus)))
+		max=max(mus)
+		sum=max+ln(colsum(exp(mus:-max)))
+		lnp=lnp+colsum(yp:*mus):-sum
 	}
 	lnprior=-1/2*(beta_rn-b)*Winv*(beta_rn-b)'-
 	        1/2*ldetW-cols(b)/2*ln(2*pi())
@@ -638,20 +641,18 @@ void draw_AB(real scalar its,
 		S.Winv =invsym(S.W)
 		S.ldetW=ln(det(S.W))
 	
+		repval=0
 		for (j=1;j<=rows(A);j++) {
 			amcmc_draw(A[j])
 			S.beta_rn[j,]=amcmc_results_lastdraw(A[j])
+			repval=repval+amcmc_results_vals(A[j])[rows(amcmc_results_vals(A[j])),1]
 		}
 
 	if (S.modtype!=1) {
 		amcmc_draw(B)
-		repval=amcmc_results_vals(B)[rows(amcmc_results_vals(B)),1]
+		repval=repval+amcmc_results_vals(B)[rows(amcmc_results_vals(B)),1]
 	}
-	else {
-		repval=0
-		for (k=1;k<=rows(A);k++) repval=repval+
-				amcmc_results_vals(A[k])[rows(amcmc_results_vals(A[k])),1]
-	}
+
 	bml_makenoise(i,its,S.noisy,repval)
 
 		S.beta_fn=amcmc_results_lastdraw(B)
