@@ -1201,7 +1201,7 @@ The price variable is price with transformed coef (-exp(b)): -0.520
 
 Contains data from draws.dta
   obs:           200
- vars:            16                          1 Mar 2021 08:53
+ vars:            16                          27 Feb 2021 11:28
  size:        12,800
 --------------------------------------------------------------------------------
               storage   display    value
